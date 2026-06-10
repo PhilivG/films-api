@@ -1,0 +1,62 @@
+GET http://localhost:3000/movies
+
+### Obtener por paginacion
+GET http://localhost:3000/movies?page=2&limit=2
+
+### Obtener por id
+GET http://localhost:3000/movies/6a1e27d286f409eb14c96320
+
+### Nuevos datos
+Post http://localhost:3000/movies
+Content-Type: application/json
+
+{
+  "title": "Pulp Fiction",
+  "year": 1994,
+  "duration": 154,
+  "poster": "https://www.themoviedb.org/t/p/original/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
+  "genre": ["Crime", "Drama"],
+  "rate": 8.9
+}
+
+### actualizar datos
+PUT http://localhost:3000/movies/6a20bdd640949f69c21281b1
+Content-Type: application/json
+
+{
+  "director": "6a28acf210f4b40c4b845bbb"
+}
+
+### Eliminar datos
+DELETE http://localhost:3000/movies/6a28ad5710f4b40c4b845bbc HTTP/1.1
+
+### Directors
+### Obtener directores
+GET http://localhost:3000/directors
+
+### Obtener directores por paginacion
+GET http://localhost:3000/directors?page=2&limit=2
+
+### Obtener por id
+GET http://localhost:3000/directors/6a1f6444f6bb4116a42383d2
+
+### Nuevos datos
+Post http://localhost:3000/directors
+Content-Type: application/json
+
+{
+  "name": "Quentin Tarantino",
+  "nationality": "American",
+  "birthYear": 1963
+}
+
+### actualizar datos
+PUT http://localhost:3000/directors/6a1f6444f6bb4116a42383d2
+Content-Type: application/json
+
+{
+  "birthYear": 2000
+}
+
+### Eliminar datos
+DELETE http://localhost:3000/directors/6a1f7d2d8c36d2af5d7c00f1 HTTP/1.1

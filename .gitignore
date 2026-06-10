@@ -1,0 +1,36 @@
+# ─── Dependencias ───────────────────────────────────────────
+node_modules/
+.pnpm-store/
+
+# ─── Variables de entorno ────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── Logs ────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Sistema operativo ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Editor / IDE ────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ─── Build / dist ────────────────────────────────────────────
+dist/
+build/
+
+# ─── Coverage / testing ──────────────────────────────────────
+coverage/
+.nyc_output/

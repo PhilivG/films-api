@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Frank Darabont",
+    "nationality": "American",
+    "birthYear": 1959
+  },
+  {
+    "name": "Christopher Nolan",
+    "nationality": "British-American",
+    "birthYear": 1970
+  },
+  {
+    "name": "Quentin Tarantino",
+    "nationality": "American",
+    "birthYear": 1963
+  },
+  {
+    "name": "Robert Zemeckis",
+    "nationality": "American",
+    "birthYear": 1951
+  },
+  {
+    "name": "Ridley Scott",
+    "nationality": "British",
+    "birthYear": 1937
+  },
+  {
+    "name": "Lana Wachowski",
+    "nationality": "American",
+    "birthYear": 1965
+  },
+  {
+    "name": "Peter Jackson",
+    "nationality": "New Zealander",
+    "birthYear": 1961
+  },
+  {
+    "name": "Roger Allers",
+    "nationality": "American",
+    "birthYear": 1949
+  },
+  {
+    "name": "Rob Minkoff",
+    "nationality": "American",
+    "birthYear": 1962
+  },
+  {
+    "name": "Joss Whedon",
+    "nationality": "American",
+    "birthYear": 1964
+  },
+  {
+    "name": "Steven Spielberg",
+    "nationality": "American",
+    "birthYear": 1946
+  },
+  {
+    "name": "James Cameron",
+    "nationality": "Canadian",
+    "birthYear": 1954
+  },
+  {
+    "name": "David Fincher",
+    "nationality": "American",
+    "birthYear": 1962
+  }
+]
