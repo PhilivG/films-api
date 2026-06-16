@@ -6,6 +6,7 @@ import {
   putMovie,
   deleteMovie
 } from '../controllers/moviesController.js'
+import { protect } from '../middlewares/auth.js'
 
 const router = Router()
 
@@ -13,10 +14,8 @@ router.get('/', getMovies)
 
 router.get('/:id', getMovie)
 
-router.post('/', postMovie)
-
-router.put('/:id', putMovie)
-
-router.delete('/:id', deleteMovie)
+router.post('/', protect, postMovie)
+router.put('/:id', protect, putMovie)
+router.delete('/:id', protect, deleteMovie)
 
 export default router

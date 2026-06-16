@@ -5,6 +5,7 @@ import express from 'express'
 import conectarDB from './config/db.js'
 import movieRouter from './router/movieRoutes.js'
 import directorRouter from './router/directorRoutes.js'
+import authRouter from './router/authRoutes.js'
 
 conectarDB()
 
@@ -12,6 +13,7 @@ const app = express()
 
 app.use(express.json())
 
+app.use('/auth', authRouter)
 app.use('/movies', movieRouter)
 app.use('/directors', directorRouter)
 

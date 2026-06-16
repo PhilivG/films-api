@@ -28,7 +28,8 @@ Content-Type: application/json
 }
 
 ### Eliminar datos
-DELETE http://localhost:3000/movies/6a28ad5710f4b40c4b845bbc HTTP/1.1
+DELETE http://localhost:3000/movies/6a2b367464af0faa79f548ac HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMmIzNjRjNjRhZjBmYWE3OWY1NDhhYiIsImlhdCI6MTc4MTIxNjg1NSwiZXhwIjoxNzgxODIxNjU1fQ.9qEilpvKlB_JEE4s_is5sTbZCDW-juxl0QqlYkVeuy4
 
 ### Directors
 ### Obtener directores
@@ -60,3 +61,38 @@ Content-Type: application/json
 
 ### Eliminar datos
 DELETE http://localhost:3000/directors/6a1f7d2d8c36d2af5d7c00f1 HTTP/1.1
+
+
+### AUTH
+### Registro
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "philipvg",
+  "password": "1234567"
+}
+
+###
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "philipvg",
+  "password": "1234567"
+}
+
+### Crear película (protegido — pega el token del login)
+POST http://localhost:3000/movies/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMmI1ZmVjNjhmOWZmNjFlNWU1OTJkMCIsImlhdCI6MTc4MTIyNzU0OSwiZXhwIjoxNzgxODMyMzQ5fQ.GLh5B6cRx62FUoIY5qiqPgmNW2yf692dVQFAgDAMnqg
+
+{
+  "title": "Inception",
+  "year": 2010,
+  "duration": 148,
+  "genre": ["Action", "Sci-Fi"],
+  "rate": 8.8
+}

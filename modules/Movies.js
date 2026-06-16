@@ -17,9 +17,7 @@ const movieSchema = new mongoose.Schema({
   },
   director: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Director',
-    minlength: 2,
-    maxlength: 50
+    ref: 'Director'
   },
   duration: {
     type: Number,

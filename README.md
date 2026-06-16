@@ -9,6 +9,7 @@ API RESTful construida con **Node.js**, **Express** y **Mongoose**, conectada a 
 - Listar, crear, actualizar y eliminar directores
 - Paginación mediante parámetros `?page=` y `?limit=`
 - Validaciones de datos en los esquemas de Mongoose
+- Autenticación de usuarios con **JWT** (registro, login y protección de rutas)
 - Conexión segura a MongoDB Atlas mediante variables de entorno
 
 ---
@@ -61,9 +62,26 @@ npm install
 
 ### 3. Configurar variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto basándote en el ejemplo de la sección anterior. Reemplaza los valores con tus credenciales de MongoDB Atlas.
+Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido, reemplazando los valores con tus propias credenciales:
+
+```env
+MONGODB_URI=tu-uri-de-mongodb-atlas
+PORT=3000
+
+JWT_SECRET=una-clave-secreta-larga-y-dificil-de-adivinar
+JWT_EXPIRES_IN=7d
+```
+
+| Variable | Descripción |
+|----------|-------------|
+| `MONGODB_URI` | Cadena de conexión a tu cluster de MongoDB Atlas |
+| `PORT` | Puerto donde correrá el servidor (por defecto `3000`) |
+| `JWT_SECRET` | Clave usada para firmar y verificar los tokens JWT |
+| `JWT_EXPIRES_IN` | Tiempo de expiración del token (ej. `7d`, `24h`, `1h`) |
 
 > ⚠️ Asegúrate de que tu IP esté autorizada en el **Network Access** de MongoDB Atlas, o usa `0.0.0.0/0` para pruebas.
+>
+> ⚠️ `JWT_SECRET` nunca debe subirse al repositorio. El `.env` ya está incluido en `.gitignore`; usa una clave distinta y robusta en producción.
 
 ### 4. Levantar el servidor en modo desarrollo
 
@@ -81,19 +99,89 @@ El servidor estará disponible en `http://localhost:1234` (o el puerto definido 
 
 ### Endpoints disponibles
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| `GET` | `/` | Estado de la API |
-| `GET` | `/movies` | Listar películas (soporta `?page=` y `?limit=`) |
-| `GET` | `/movies/:id` | Obtener una película por ID |
-| `POST` | `/movies` | Crear una nueva película |
-| `PUT` | `/movies/:id` | Actualizar una película |
-| `DELETE` | `/movies/:id` | Eliminar una película |
-| `GET` | `/directors` | Listar directores |
-| `GET` | `/directors/:id` | Obtener un director por ID |
-| `POST` | `/directors` | Crear un nuevo director |
-| `PUT` | `/directors/:id` | Actualizar un director |
-| `DELETE` | `/directors/:id` | Eliminar un director |
+| Método | Ruta | Descripción | Protegida |
+|--------|------|-------------|-----------|
+| `GET` | `/` | Estado de la API | No |
+| `POST` | `/auth/register` | Registrar un nuevo usuario | No |
+| `POST` | `/auth/login` | Iniciar sesión y obtener un token JWT | No |
+| `GET` | `/movies` | Listar películas (soporta `?page=` y `?limit=`) | No |
+| `GET` | `/movies/:id` | Obtener una película por ID | No |
+| `POST` | `/movies` | Crear una nueva película | 🔒 Sí |
+| `PUT` | `/movies/:id` | Actualizar una película | 🔒 Sí |
+| `DELETE` | `/movies/:id` | Eliminar una película | 🔒 Sí |
+| `GET` | `/directors` | Listar directores | No |
+| `GET` | `/directors/:id` | Obtener un director por ID | No |
+| `POST` | `/directors` | Crear un nuevo director | 🔒 Sí |
+| `PUT` | `/directors/:id` | Actualizar un director | 🔒 Sí |
+| `DELETE` | `/directors/:id` | Eliminar un director | 🔒 Sí |
+
+---
+
+## Autenticación (JWT)
+
+Las rutas marcadas como **protegidas** requieren un token JWT válido enviado en el header `Authorization`.
+
+### 1. Registro
+
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "username": "philipvg",
+  "password": "1234567"
+}
+```
+
+La contraseña se guarda cifrada con **bcryptjs** (nunca en texto plano). La respuesta incluye el token generado para ese usuario.
+
+### 2. Login
+
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "username": "philipvg",
+  "password": "1234567"
+}
+```
+
+Si las credenciales son correctas, la API responde con un token JWT:
+
+```json
+{
+  "exitoso": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### 3. Usar el token en rutas protegidas
+
+Envía el token en el header `Authorization` con el prefijo `Bearer`:
+
+```http
+POST /movies
+Content-Type: application/json
+Authorization: Bearer <tu-token-aquí>
+
+{
+  "title": "Inception",
+  "year": 2010,
+  "duration": 148,
+  "genre": ["Action", "Sci-Fi"],
+  "rate": 8.8
+}
+```
+
+Si el token falta, es inválido o expiró, la API responde `401 Unauthorized`.
+
+### ¿Cómo funciona internamente?
+
+- **`modules/User.js`**: modelo de usuario con `username` y `password`; un hook `pre('save')` cifra la contraseña con bcrypt antes de guardarla, y un método `comparePassword` la compara en el login.
+- **`controllers/authController.js`**: expone `register` y `login`, y genera el token con `jwt.sign()` usando `JWT_SECRET` y `JWT_EXPIRES_IN`.
+- **`middlewares/auth.js`**: middleware `protect` que verifica el token con `jwt.verify()`, recupera el usuario y lo agrega a `req.user` antes de continuar al controlador.
+- **`router/movieRoutes.js` y `router/directorRoutes.js`**: aplican `protect` únicamente a `POST`, `PUT` y `DELETE`; las rutas `GET` permanecen públicas.
 
 ---
 
@@ -121,11 +209,11 @@ mongoimport --uri "tu-mongodb-uri" --collection directors --file directors.json 
 
 Funcionalidades implementadas hasta la fecha:
 - [x] Conexión a MongoDB Atlas
-- [x] Modelos con validaciones (Movies, Directors)
+- [x] Modelos con validaciones (Movies, Directors, User)
 - [x] CRUD completo para ambos recursos
 - [x] Paginación con `.skip()` y `.limit()`
 - [x] Manejo de errores con `try/catch`
-- [ ] Autenticación con JWT *(pendiente)*
+- [x] Autenticación con JWT (registro, login y rutas protegidas)
 - [ ] Pruebas automatizadas *(pendiente)*
 
 ---

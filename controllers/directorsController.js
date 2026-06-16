@@ -33,7 +33,7 @@ const getDirector = async (req, res) => {
     const director = await Director.findById(id)
 
     if (!director) {
-      res.status(404).json({
+      return res.status(404).json({
         exitoso: false,
         mensaje: 'Director no encontrado'
       })
@@ -114,7 +114,7 @@ const deleteDirector = async (req, res) => {
     const deletedDirector = await Director.findByIdAndDelete(id)
 
     if (!deletedDirector) {
-      res.status(404).json({
+      return res.status(404).json({
         exitoso: false,
         mensaje: 'Director no encontrado'
       })
